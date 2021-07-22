@@ -1,6 +1,4 @@
-* search for uuuuuu
-
-* Remaining Tasks
+* Future Tasks
 * include one or more sets
 * include warning messages
 * add custom description
@@ -8,9 +6,6 @@
 * enter VB user interface script
 * add message if dimensions exceed capability of script
 * automate prevention of very column long formats
-
-* New
-* use .tf=4 to produce quotes
 
 
 
