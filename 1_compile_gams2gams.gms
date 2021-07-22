@@ -16,9 +16,10 @@
 
 * Set scope of interface
 * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *
-SCALAR maxcolcount maximum number of colum dimensions needed /4/;
-SET    dimensions  maximum dimensions of item /1*20/;
-SET    arguments   maximum simultaneous requests with one libinclude statement /1*10/;
+SCALAR maxcolcount   maximum number of colum dimensions needed /4/;
+SCALAR listingexit   minimum size to insert on-off listing /100/;
+SET    dimensions    maximum dimensions of item /1*12/;
+SET    arguments     maximum simultaneous requests with one libinclude statement /1*8/;
 * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ *
 
 
@@ -59,10 +60,10 @@ Loop(arguments,
 
 PUT / '**++++++++++++**' / '* Parameter %',ord(arguments) / '**++++++++++++**' / /;
 PUT '$if  "%',ord(arguments),'"==""'  @60 '$goto gams2gamslabel_alldone' /;
-PUT '$setcomps %',ord(arguments),' g2g__arg',ord(arguments),' g2g__ext',ord(arguments) /;
+PUT '$setcomps %',ord(arguments),' g2g__arg',ord(arguments),' g2g__suffix',ord(arguments) /;
 PUT '$setglobal gams2gams__arg',ord(arguments),' %g2g__arg',ord(arguments),'%'  /;
-PUT '$setglobal gams2gams__ext',ord(arguments),' %g2g__ext',ord(arguments),'%'  /;
-PUT '$if not "%gams2gams__ext',ord(arguments),'%" == ""' @60 '$setglobal gams2gams__ext',ord(arguments),' "%gams2gams__ext',ord(arguments),'%_"'  /;
+PUT '$setglobal gams2gams__suffix',ord(arguments),' %g2g__suffix',ord(arguments),'%'  /;
+PUT '$if not "%gams2gams__suffix',ord(arguments),'%" == ""' @60 '$setglobal gams2gams__suffix',ord(arguments),' "%gams2gams__suffix',ord(arguments),'%_"'  /;
 PUT '$log Gams2Gams full argument ',ord(arguments),' = %',ord(arguments) /;
 PUT '$log Gams2Gams reduced argument %gams2gams__arg',ord(arguments),'%' /;
 
@@ -71,12 +72,13 @@ PUT '$if "%gams2gams_filename%" == "no"' @60 '$goto gams2gamslabel_defaultname',
 PUT '$if setglobal gams2gams_filename'   @60 '$goto gams2gamslabel_filedeclared',ord(arguments) /;
 
 PUT '$label gams2gamslabel_defaultname',ord(arguments) /;
-PUT 'FILE gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'% /%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%data.gms/;' /;
+PUT 'FILE gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'% /%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%data.gms/;' /;
 *PUT 'FILE gams2gams_datafile_%',ord(arguments),' /%',ord(arguments),'_data.gms/;' /;
 PUT '$goto gams2gamslabel_afterfiledeclaration',ord(arguments) /;
 
 PUT '$label gams2gamslabel_filedeclared',ord(arguments) /;
-PUT 'FILE gams2gams_datafile_%gams2gams__arg',ord(arguments),'% /%gams2gams_filename%.gms/;' /;
+IF(ord(arguments) gt 1.5, PUT '$setglobal gams2gams_ap 1' /; );
+PUT 'FILE gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'% /%gams2gams_filename%.gms/;' /;
 PUT '$goto gams2gamslabel_afterfiledeclaration',ord(arguments) /;
 
 PUT '$label gams2gamslabel_afterfiledeclaration',ord(arguments) /;
@@ -104,17 +106,22 @@ $if not setglobal gams2gams_nj                   $setglobal gams2gams_nj        
 $if not setglobal gams2gams_lj                   $setglobal gams2gams_lj        2
 $if not setglobal gams2gams_tj                   $setglobal gams2gams_tj        1
 
+$if not setglobal gams2gams_ap                   $setglobal gams2gams_ap        0
+
+
+
 $offput
 
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.pw=32767;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.nd=%gams2gams_nd%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.nw=%gams2gams_nw%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.lw=%gams2gams_lw%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tw=%gams2gams_tw%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.nj=%gams2gams_nj%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.lj=%gams2gams_lj%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tj=%gams2gams_tj%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tf=%gams2gams_tf%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.pw=32767;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.nd=%gams2gams_nd%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.nw=%gams2gams_nw%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.lw=%gams2gams_lw%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tw=%gams2gams_tw%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.nj=%gams2gams_nj%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.lj=%gams2gams_lj%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tj=%gams2gams_tj%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tf=%gams2gams_tf%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.ap=%gams2gams_ap%;'/;
 
 PUT '$if not setglobal gams2gams_description                        $setglobal gams2gams_description %gams2gams__arg',ord(arguments),'%.ts' /;
 
@@ -122,7 +129,7 @@ PUT '$libinclude getdomains %',ord(arguments) /;
 PUT '$include gpxyz_domaininfo.gms' /;
 
 * Start writing data file
-PUT 'PUT gams2gams_datafile_%gams2gams__arg',ord(arguments)'%_%gams2gams__ext',ord(arguments),'%;' /;
+PUT 'PUT gams2gams_datafile_%gams2gams__arg',ord(arguments)'%_%gams2gams__suffix',ord(arguments),'%;' /;
 
 Loop(dimensions,
 
@@ -205,8 +212,8 @@ PUT 'gams2gams__data__limit = sum((';
   PUT '),'/;
 * Insert count based listing
   PUT 'gams2gams__data__count = gams2gams__data__count + 1;' /;
-  PUT 'IF(gams2gams__data__count eq 10,PUT "$offlisting" /; );' /;
-  PUT 'IF(gams2gams__data__count eq gams2gams__data__limit-10,PUT "$onlisting" /; );' /;
+  PUT 'IF(gams2gams__data__count eq 10 and gams2gams__data__limit gt ',listingexit,',PUT "$offlisting" /; );' /;
+  PUT 'IF(gams2gams__data__count eq gams2gams__data__limit-10 and gams2gams__data__limit gt ',listingexit,',PUT "$onlisting" /; );' /;
 * PUT d_1__%1.TL,".",d_2__%1.TL,".",d_3__%1.TL,".",d_4__%1.TL;
   PUT ' PUT ';
   LOOP(row_dimension $(ord(row_dimension) le ord(dimensions)),
@@ -257,8 +264,8 @@ PUT 'gams2gams__data__limit = sum((';
 *
   PUT ' gams2gams_currentcolumn = gams2gams_startlabelcol;' /;
 * Temporarily set justification to right  uuuu
-  PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tw=%gams2gams_nw%;'/;
-  PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tj=1;'/;
+  PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tw=%gams2gams_nw%;'/;
+  PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tj=1;'/;
 * LOOP((
   PUT 'LOOP((';
 * d_3__%1,d_4__%1
@@ -295,8 +302,8 @@ PUT 'gams2gams__data__limit = sum((';
   PUT / '  gams2gams_currentcolumn = gams2gams_currentcolumn + gams2gams_advancecolumn;' /;
   PUT '); PUT /;' /;
 * Reset label justification
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tw=%gams2gams_tw%;'/;
-PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__ext',ord(arguments),'%.tj=%gams2gams_tj%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tw=%gams2gams_tw%;'/;
+PUT 'gams2gams_datafile_%gams2gams__arg',ord(arguments),'%_%gams2gams__suffix',ord(arguments),'%.tj=%gams2gams_tj%;'/;
 
 
 *
@@ -402,15 +409,7 @@ PUT '$label gams2gams_endofall',ord(arguments) / /;
 
 PUT '$label gams2gamslabel_afterargument_',ord(arguments) /;
 
-
 $onput
-PUT "* +++++++++++++++++++" /;
-PUT "* GAMS to GAMS Export" /;
-PUT "* Uwe A. Schneider" /;
-PUT "* Parameter compiled on %system.date%" /;
-PUT "* from file %system.incparent%" /;
-PUT "* with interface %system.fp%%system.fn%%system.fe%" /;
-PUT "* +++++++++++++++++++" /;
 PUTCLOSE;
 $offput
 
@@ -419,6 +418,13 @@ $offput
 
 $onput
 $label gams2gamslabel_alldone
+PUT "* +++++++++++++++++++" /;
+PUT "* GAMS to GAMS Export" /;
+PUT "* Uwe A. Schneider" /;
+PUT "* Parameter compiled on %system.date%" /;
+PUT "* from file %system.incparent%" /;
+PUT "* with interface %system.fp%%system.fn%%system.fe%" /;
+PUT "* +++++++++++++++++++" /;
 $offput
 PUTCLOSE;
 
