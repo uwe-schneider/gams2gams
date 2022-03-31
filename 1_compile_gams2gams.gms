@@ -1,4 +1,6 @@
-* Future Tasks
+* search for uuuuuu
+
+* Remaining Tasks
 * include one or more sets
 * include warning messages
 * add custom description
@@ -6,6 +8,9 @@
 * enter VB user interface script
 * add message if dimensions exceed capability of script
 * automate prevention of very column long formats
+
+* New
+* use .tf=4 to produce quotes
 
 
 
@@ -404,10 +409,6 @@ PUT '$label gams2gams_endofall',ord(arguments) / /;
 
 PUT '$label gams2gamslabel_afterargument_',ord(arguments) /;
 
-$onput
-PUTCLOSE;
-$offput
-
   );
 
 
@@ -420,6 +421,7 @@ PUT "* Parameter compiled on %system.date%" /;
 PUT "* from file %system.incparent%" /;
 PUT "* with interface %system.fp%%system.fn%%system.fe%" /;
 PUT "* +++++++++++++++++++" /;
+PUTCLOSE;
 $offput
 PUTCLOSE;
 

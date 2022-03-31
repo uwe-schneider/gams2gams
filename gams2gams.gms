@@ -2230,7 +2230,6 @@ $goto gams2gams_endofall1
 $label gams2gams_endofall1
 
 $label gams2gamslabel_afterargument_1
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %2
@@ -4452,7 +4451,6 @@ $goto gams2gams_endofall2
 $label gams2gams_endofall2
 
 $label gams2gamslabel_afterargument_2
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %3
@@ -6674,7 +6672,6 @@ $goto gams2gams_endofall3
 $label gams2gams_endofall3
 
 $label gams2gamslabel_afterargument_3
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %4
@@ -8896,7 +8893,6 @@ $goto gams2gams_endofall4
 $label gams2gams_endofall4
 
 $label gams2gamslabel_afterargument_4
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %5
@@ -11118,7 +11114,6 @@ $goto gams2gams_endofall5
 $label gams2gams_endofall5
 
 $label gams2gamslabel_afterargument_5
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %6
@@ -13340,7 +13335,6 @@ $goto gams2gams_endofall6
 $label gams2gams_endofall6
 
 $label gams2gamslabel_afterargument_6
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %7
@@ -15562,7 +15556,6 @@ $goto gams2gams_endofall7
 $label gams2gams_endofall7
 
 $label gams2gamslabel_afterargument_7
-PUTCLOSE;
 
 **++++++++++++**
 * Parameter %8
@@ -17784,7 +17777,6 @@ $goto gams2gams_endofall8
 $label gams2gams_endofall8
 
 $label gams2gamslabel_afterargument_8
-PUTCLOSE;
 $label gams2gamslabel_alldone
 PUT "* +++++++++++++++++++" /;
 PUT "* GAMS to GAMS Export" /;
@@ -17793,3 +17785,4 @@ PUT "* Parameter compiled on %system.date%" /;
 PUT "* from file %system.incparent%" /;
 PUT "* with interface %system.fp%%system.fn%%system.fe%" /;
 PUT "* +++++++++++++++++++" /;
+PUTCLOSE;
